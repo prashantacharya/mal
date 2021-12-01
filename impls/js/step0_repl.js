@@ -1,4 +1,8 @@
-const prompt = require('prompt-sync')({ sigint: true });
+let readline;
+
+if (typeof module !== 'undefined') {
+  readline = require('./node_readline');
+}
 
 function READ(input) {
   return input;
@@ -19,10 +23,11 @@ function rep(input) {
   return PRINT(result);
 }
 
+// repl loop
 if (typeof require !== 'undefined' && require.main === module) {
   // Synchronous node.js commandline mode
   while (true) {
-    var line = prompt('user> ');
+    var line = readline.readline('user> ');
     if (line === null) {
       break;
     }
