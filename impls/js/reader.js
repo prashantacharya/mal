@@ -1,3 +1,5 @@
+const SymbolType = require('./types');
+
 class Reader {
   constructor(tokens) {
     this.tokens = tokens;
@@ -56,7 +58,7 @@ function read_atom(reader) {
   } else if (token?.match(/^-?[0-9][0-9.]*$/)) {
     return parseFloat(token, 10); // float
   } else {
-    return token;
+    return new SymbolType(token);
   }
 }
 
