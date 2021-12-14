@@ -7,6 +7,7 @@ function pr_str(ast) {
     ast.forEach((elem) => {
       if (Array.isArray(elem)) str += pr_str(elem);
       else if (elem instanceof SymbolType) str += elem.value + ' ';
+      else if (elem === null) str += 'nil ';
       else str += elem + ' ';
     });
 
