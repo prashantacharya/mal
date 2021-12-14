@@ -20,10 +20,12 @@ repl_env.set('-', (a, b) => a - b);
 repl_env.set('*', (a, b) => a * b);
 repl_env.set('/', (a, b) => a / b);
 repl_env.set('^', (a, b) => a ** b);
+repl_env.set('max', (a, b) => (a > b ? a : b));
+repl_env.set('min', (a, b) => (a < b ? a : b));
 
 function eval_ast(ast, env) {
   if (ast instanceof SymbolType) {
-    return repl_env.get(ast.value);
+    return env.get(ast.value);
   } else if (Array.isArray(ast)) {
     return ast.map((a) => EVAL(a, env));
   }
@@ -37,21 +39,38 @@ function EVAL(ast, env) {
   } else {
     if (ast.length === 0) return ast;
 
-    const evaluated_list = eval_ast(ast, env);
-    const func = evaluated_list[0];
-    const [first, ...args] = evaluated_list;
+    switch (ast[0].value) {
+      case 'def!':
+        const variableName = ast[1].value;
+        const value = EVAL(ast[2], env);
+        return env.set(variableName, value);
 
-    let val;
+      case 'let*':
+        const newEnv = new Env(env);
+        const a1 = ast[1],
+          a2 = ast[2];
+        for (let i = 0; i < a1.length; i += 2) {
+          newEnv.set(a1[i].value, EVAL(a1[i + 1], newEnv));
+        }
 
-    if (args[0] && args[1]) {
-      val = func(args[0], args[1]);
+        return EVAL(a2, newEnv);
+
+      default:
+        const evaluated_list = eval_ast(ast, env);
+        const [func, ...args] = evaluated_list;
+
+        let val;
+
+        if (args[0] && args[1]) {
+          val = func(args[0], args[1]);
+        }
+
+        for (let i = 2; i < args.length; i++) {
+          val = func(val, args[i]);
+        }
+
+        return val;
     }
-
-    for (let i = 2; i < args.length; i++) {
-      val = func(val, args[i]);
-    }
-
-    return val;
   }
 }
 
@@ -66,7 +85,7 @@ function rep(input) {
 
     return PRINT(result);
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
   }
 }
 

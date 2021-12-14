@@ -16,10 +16,10 @@ class Env {
   find(key) {
     if (this.data[key]) {
       return this.data;
+    } else if (this.outer) {
+      return this.outer.find(key);
     } else {
-      if (this.outer) {
-        this.outer.find(key);
-      }
+      return null;
     }
   }
 
