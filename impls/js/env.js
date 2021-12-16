@@ -1,9 +1,15 @@
 const SymbolType = require('./types');
 
 class Env {
-  constructor(outer) {
-    this.outer = outer || null;
+  constructor(outer = null, binds, exprs) {
+    this.outer = outer;
     this.data = {};
+
+    if (binds && exprs) {
+      for (let i = 0; i < binds.length; i++) {
+        this.data[binds[i].value] = exprs[i];
+      }
+    }
   }
 
   set(key, value) {

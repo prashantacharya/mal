@@ -15,6 +15,7 @@ function pr_str(ast) {
   }
 
   if (ast instanceof SymbolType) return ast.value;
+  else if (ast === null) return 'nil';
   return ast;
 }
 

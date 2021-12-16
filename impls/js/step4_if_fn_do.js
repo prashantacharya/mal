@@ -20,8 +20,16 @@ repl_env.set('-', (a, b) => a - b);
 repl_env.set('*', (a, b) => a * b);
 repl_env.set('/', (a, b) => a / b);
 repl_env.set('^', (a, b) => a ** b);
+repl_env.set('%', (a, b) => a % b);
 repl_env.set('max', (a, b) => (a > b ? a : b));
 repl_env.set('min', (a, b) => (a < b ? a : b));
+repl_env.set('<', (a, b) => a < b);
+repl_env.set('>', (a, b) => a > b);
+repl_env.set('<=', (a, b) => a <= b);
+repl_env.set('>=', (a, b) => a >= b);
+repl_env.set('>=', (a, b) => a >= b);
+repl_env.set('>=', (a, b) => a >= b);
+repl_env.set('==', (a, b) => a == b);
 
 function eval_ast(ast, env) {
   if (ast instanceof SymbolType) {
@@ -54,6 +62,14 @@ function EVAL(ast, env) {
         }
 
         return EVAL(a2, newEnv);
+
+      case 'do':
+        return eval_ast(ast, env);
+
+      case 'if':
+        const condition = EVAL(ast[1], env);
+        if (condition) return EVAL(ast[2], env);
+        else return EVAL(ast[3], env);
 
       default:
         const evaluated_list = eval_ast(ast, env);

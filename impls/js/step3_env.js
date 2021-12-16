@@ -20,6 +20,7 @@ repl_env.set('-', (a, b) => a - b);
 repl_env.set('*', (a, b) => a * b);
 repl_env.set('/', (a, b) => a / b);
 repl_env.set('^', (a, b) => a ** b);
+repl_env.set('%', (a, b) => a % b);
 repl_env.set('max', (a, b) => (a > b ? a : b));
 repl_env.set('min', (a, b) => (a < b ? a : b));
 
