@@ -1,7 +1,7 @@
 const SymbolType = require('./types');
 
 class Env {
-  constructor(outer = null, binds, exprs) {
+  constructor(outer = null, binds = null, exprs = null) {
     this.outer = outer;
     this.data = {};
 

@@ -1,3 +1,4 @@
+const { ns } = require('./core');
 const Env = require('./env');
 const { pr_str } = require('./printer');
 const { read_str } = require('./reader');
@@ -15,21 +16,9 @@ function READ(input) {
 }
 
 const repl_env = new Env();
-repl_env.set('+', (a, b) => a + b);
-repl_env.set('-', (a, b) => a - b);
-repl_env.set('*', (a, b) => a * b);
-repl_env.set('/', (a, b) => a / b);
-repl_env.set('^', (a, b) => a ** b);
-repl_env.set('%', (a, b) => a % b);
-repl_env.set('max', (a, b) => (a > b ? a : b));
-repl_env.set('min', (a, b) => (a < b ? a : b));
-repl_env.set('<', (a, b) => a < b);
-repl_env.set('>', (a, b) => a > b);
-repl_env.set('<=', (a, b) => a <= b);
-repl_env.set('>=', (a, b) => a >= b);
-repl_env.set('>=', (a, b) => a >= b);
-repl_env.set('>=', (a, b) => a >= b);
-repl_env.set('==', (a, b) => a == b);
+Object.keys(ns).forEach((key) => {
+  repl_env.set(key, ns[key]);
+});
 
 function eval_ast(ast, env) {
   if (ast instanceof SymbolType) {
@@ -71,15 +60,17 @@ function EVAL(ast, env) {
         if (condition) return EVAL(ast[2], env);
         else return EVAL(ast[3], env);
 
+      case 'fn*':
+        return function () {
+          const funcEnvironment = new Env(env, ast[1], arguments);
+          return EVAL(ast[2], funcEnvironment);
+        };
+
       default:
         const evaluated_list = eval_ast(ast, env);
         const [func, ...args] = evaluated_list;
 
-        let val;
-
-        if (args[0] && args[1]) {
-          val = func(args[0], args[1]);
-        }
+        let val = func(args[0], args[1]);
 
         for (let i = 2; i < args.length; i++) {
           val = func(val, args[i]);

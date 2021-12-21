@@ -6,9 +6,7 @@ function pr_str(ast) {
 
     ast.forEach((elem) => {
       if (Array.isArray(elem)) str += pr_str(elem);
-      else if (elem instanceof SymbolType) str += elem.value + ' ';
-      else if (elem === null) str += 'nil ';
-      else str += elem + ' ';
+      else str += pr_str(elem) + ' ';
     });
 
     return str.trim() + ')';
@@ -16,6 +14,7 @@ function pr_str(ast) {
 
   if (ast instanceof SymbolType) return ast.value;
   else if (ast === null) return 'nil';
+  else if (typeof ast === 'function') return '#<function>';
   return ast;
 }
 
