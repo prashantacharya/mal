@@ -70,6 +70,8 @@ function EVAL(ast, env) {
         const evaluated_list = eval_ast(ast, env);
         const [func, ...args] = evaluated_list;
 
+        console.log({ evaluated_list });
+
         let val = func(args[0], args[1]);
 
         for (let i = 2; i < args.length; i++) {
@@ -88,6 +90,7 @@ function PRINT(input) {
 function rep(input) {
   try {
     let ast = READ(input);
+    console.log({ ast });
     let result = EVAL(ast, repl_env);
 
     return PRINT(result);
