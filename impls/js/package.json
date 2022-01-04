@@ -4,7 +4,7 @@
   "description": "",
   "main": "step0_repl.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node step4_if_fn_do"
   },
   "author": "",
   "license": "ISC",
