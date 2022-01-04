@@ -51,7 +51,7 @@ function read_list(reader) {
 function read_atom(reader) {
   let token = reader.next();
 
-  if (!token) throw new Error('unexpected error');
+  if (!token) throw new Error('Expected ), got EOF');
 
   if (token?.match(/^-?[0-9]+$/)) {
     return parseInt(token, 10); // integer

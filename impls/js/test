@@ -18,10 +18,17 @@
 )
 
 
-
 (def! fib (
   fn* (N) (
       if (< N 10) 1 (+ (fib (- N 1)) (fib (- N 2)))
+    )
+  )
+)
+
+(
+  def! isPositive (
+    fn* (n) (
+      if (> n 0) true false 
     )
   )
 )
