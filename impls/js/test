@@ -10,14 +10,11 @@
   )
 )
 
-
 (
   def! isEven (
     fn* (num) (= (% num 2) 0)
   )
 )
-
-
 
 (def! fib (
   fn* (N) (
@@ -26,14 +23,14 @@
   )
 )
 
-# Create a list
+; Create a list
 (def! l (list 1 2 3))
 
-# Check if list
+; Check if list
 (list? (list 1 2 3))
 
-# Check if list is empty
+; Check if list is empty
 (empty? (list))
 
-# Count list elements
+; Count list elements
 (count (list 1 2 3 4 5 6))
