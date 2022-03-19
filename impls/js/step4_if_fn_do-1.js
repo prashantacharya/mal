@@ -3,7 +3,6 @@ const Env = require('./env');
 const { pr_str } = require('./printer');
 const { read_str } = require('./reader');
 const SymbolType = require('./types');
-const { apply } = require('./util');
 
 let readline;
 
@@ -54,33 +53,30 @@ function EVAL(ast, env) {
         return EVAL(a2, newEnv);
 
       case 'do':
-        const evalList = ast.slice(1);
-        const el = eval_ast(evalList, env);
-        return el[el.length - 1];
+        return eval_ast(ast, env);
 
       case 'if':
-        const cond = EVAL(ast[1], env);
-        if (cond === false || cond === null) {
-          if (ast.length > 3) {
-            return EVAL(ast[3], env);
-          } else {
-            return null;
-          }
-        } else {
-          return EVAL(ast[2], env);
-        }
+        const condition = EVAL(ast[1], env);
+        if (condition) return EVAL(ast[2], env);
+        else return EVAL(ast[3], env);
 
       case 'fn*':
-        return function (...args) {
-          const funcEnv = new Env(env, ast[1], args);
-          return EVAL(ast[2], funcEnv);
+        return function () {
+          const funcEnvironment = new Env(env, ast[1], arguments);
+          return EVAL(ast[2], funcEnvironment);
         };
 
       default:
         const evaluated_list = eval_ast(ast, env);
         const [func, ...args] = evaluated_list;
 
-        return apply(func, args);
+        let val = func(args[0], args[1]);
+
+        for (let i = 2; i < args.length; i++) {
+          val = func(val, args[i]);
+        }
+
+        return val;
     }
   }
 }
@@ -99,8 +95,6 @@ function rep(input) {
     console.error(error.message);
   }
 }
-
-rep('(def! not (fn* (a) (if a false true)))');
 
 // repl loop
 if (typeof require !== 'undefined' && require.main === module) {

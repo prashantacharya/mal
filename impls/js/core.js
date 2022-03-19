@@ -5,7 +5,13 @@ const ns = {
   '-': (a, b) => a - b,
   '*': (a, b) => a * b,
   '/': (a, b) => a / b,
-  '=': (a, b) => a === b,
+  '=': (a, b) => {
+    if (Array.isArray(a) && Array.isArray(b)) {
+      return a.length === b.length && a.every((x, i) => x === b[i]);
+    }
+
+    return a === b;
+  },
   '<': (a, b) => a < b,
   '>': (a, b) => a > b,
   '<=': (a, b) => a <= b,
@@ -16,10 +22,27 @@ const ns = {
     pr_str(val, true);
     return null;
   },
-  list: (...args) => args,
+  list: (a, b) => {
+    if (a === undefined) {
+      return [];
+    }
+
+    if (b === undefined) {
+      return [a];
+    }
+
+    if (Array.isArray(a)) {
+      a.push(b);
+      return a;
+    }
+
+    return [a, b];
+  },
   'list?': (arg) => Array.isArray(arg),
   'empty?': (arg) => Array.isArray(arg) && arg.length === 0,
-  count: (arg) => arg.length,
+  count: (arg) => {
+    return arg ? arg.length : 0;
+  },
 };
 
 module.exports = { ns };
