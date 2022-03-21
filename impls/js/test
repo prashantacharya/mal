@@ -34,3 +34,22 @@
 
 ; Count list elements
 (count (list 1 2 3 4 5 6))
+
+(def! load-file (
+    fn* (f) (
+      eval (
+        read-string (
+          concat "(do " (slurp f) ")"
+        )
+      )
+    )
+  )
+)
+
+(
+  eval (
+    read-string (
+      concat "(do " (slurp "hello.bang") ")"
+    )
+  )
+)

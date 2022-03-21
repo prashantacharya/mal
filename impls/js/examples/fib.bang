@@ -1,0 +1,14 @@
+(def! fib (
+  fn* (N) (
+      if (<= N 2) 1 (+ (fib (- N 1)) (fib (- N 2)))
+    )
+  )
+)
+
+(prn (fib 1))
+(prn (fib 2))
+(prn (fib 3))
+(prn (fib 4))
+(prn (fib 5))
+(prn (fib 10))
+

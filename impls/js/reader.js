@@ -1,4 +1,4 @@
-const SymbolType = require('./types');
+const { SymbolType, StringType } = require('./types');
 
 class Reader {
   constructor(tokens) {
@@ -51,7 +51,7 @@ function read_list(reader) {
 function read_atom(reader) {
   let token = reader.next();
 
-  if (!token) throw new Error('unexpected error');
+  if (!token) throw new Error('Syntax Error: Expected ), got ', token);
 
   if (token?.match(/^-?[0-9]+$/)) {
     return parseInt(token, 10); // integer
@@ -63,6 +63,8 @@ function read_atom(reader) {
     return false;
   } else if (token === 'nil') {
     return null;
+  } else if (token[0] === '"') {
+    return new StringType(token.slice(1, -1));
   } else {
     return new SymbolType(token);
   }

@@ -1,6 +1,6 @@
-const SymbolType = require('./types');
+const { SymbolType, StringType } = require('./types');
 
-function pr_str(ast) {
+function pr_str(ast, print_readably = false) {
   if (Array.isArray(ast)) {
     let str = '(';
 
@@ -13,8 +13,9 @@ function pr_str(ast) {
   }
 
   if (ast instanceof SymbolType) return ast.value;
+  if (ast instanceof StringType) return ast.value;
   else if (ast === null) return 'nil';
-  else if (ast.type === 'function') return '#<function>';
+  else if (ast?.type === 'function') return '#<function>';
   return ast;
 }
 

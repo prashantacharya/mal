@@ -4,6 +4,7 @@ const { pr_str } = require('./printer');
 const { read_str } = require('./reader');
 const { SymbolType } = require('./types');
 const { apply } = require('./util');
+const colors = require('colors');
 
 let readline;
 
@@ -20,6 +21,8 @@ const repl_env = new Env();
 Object.keys(ns).forEach((key) => {
   repl_env.set(key, ns[key]);
 });
+
+repl_env.set('eval', (ast) => EVAL(ast, repl_env));
 
 function eval_ast(ast, env) {
   if (ast instanceof SymbolType) {
@@ -82,10 +85,10 @@ function EVAL(ast, env) {
         default:
           const evaluated_list = eval_ast(ast, env);
 
-          if (evaluated_list.type !== 'function') {
+          if (evaluated_list?.type !== 'function') {
             const [func, ...args] = evaluated_list;
 
-            if (func.type === 'function') {
+            if (func?.type === 'function') {
               return apply(func.fn, args);
             }
 
@@ -107,22 +110,41 @@ function rep(input) {
 
     return PRINT(result);
   } catch (error) {
-    console.error(error.message);
+    console.error(colors.bold.red(error.message));
   }
 }
 
 rep('(def! not (fn* (a) (if a false true)))');
+rep(
+  `
+  (def! load-file (
+      fn* (f) (
+        eval (
+          read-string (
+            concat "(do " (slurp f) ")"
+          )
+        )
+      )
+    )
+  )
+`
+);
 
-// repl loop
-if (typeof require !== 'undefined' && require.main === module) {
-  // Synchronous node.js commandline mode
-  while (true) {
-    var line = readline.readline('user> ');
-    if (line === null) {
-      break;
-    }
-    if (line) {
-      console.log(rep(line));
+//console.log(process.argv);
+
+if (process.argv[2]) {
+  rep(`(load-file "${process.argv[2]}")`);
+} else {
+  if (typeof require !== 'undefined' && require.main === module) {
+    // Synchronous node.js commandline mode
+    while (true) {
+      var line = readline.readline('user> ');
+      if (line === null) {
+        break;
+      }
+      if (line) {
+        console.log(rep(line));
+      }
     }
   }
 }

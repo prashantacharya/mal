@@ -4,4 +4,13 @@ class SymbolType {
   }
 }
 
-module.exports = SymbolType;
+class StringType {
+  constructor(value) {
+    this.value = value;
+  }
+}
+
+module.exports = {
+  SymbolType,
+  StringType,
+};

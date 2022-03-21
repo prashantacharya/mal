@@ -1,4 +1,4 @@
-const SymbolType = require('./types');
+const { SymbolType } = require('./types');
 
 class Env {
   constructor(outer = null, binds = null, exprs = null) {

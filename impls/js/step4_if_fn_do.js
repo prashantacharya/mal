@@ -2,7 +2,7 @@ const { ns } = require('./core');
 const Env = require('./env');
 const { pr_str } = require('./printer');
 const { read_str } = require('./reader');
-const SymbolType = require('./types');
+const { SymbolType } = require('./types');
 const { apply } = require('./util');
 
 let readline;
