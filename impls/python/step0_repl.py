@@ -1,3 +1,7 @@
+
+from reader import readline
+
+
 def READ(code):
     return code
 
@@ -12,6 +16,9 @@ def rep(code: str):
 
 
 while True:
-    code = input("user> ")
+    code = readline()
+    if code is None: 
+        break;
+
     result = rep(code)
     print(result)
